@@ -7,8 +7,8 @@ project(re2c
 
 # Set up CMake directories
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_LIST_DIR}/cmake)
-set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}/bin)
 
 # Variables needed for generating config.h
 set(PACKAGE ${PROJECT_NAME})
@@ -203,41 +203,41 @@ set(custom_SRCS
 #bison input: src/ast/parser.ypp
 
 # Generate config.h file
-configure_file(config.h.cmake.in ${CMAKE_SOURCE_DIR}/config.h)
+configure_file(config.h.cmake.in ${CMAKE_CURRENT_SOURCE_DIR}/config.h)
 
-include_directories(${CMAKE_SOURCE_DIR} ${CMAKE_BINARY_DIR})
+include_directories(${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR})
 
 add_executable(re2c_bootstrap ${re2c_SRCS} ${re2c_HDRS} ${bootstrap_SRCS} ${bootstrap_HDRS})
 
 # Use the bootstrapped re2c to regenerate .re files and create a new version
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/src/ast/lex.cc
-	COMMAND re2c_bootstrap -b ${CMAKE_SOURCE_DIR}/src/ast/lex.re -o ${CMAKE_BINARY_DIR}/src/ast/lex.cc
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/src/ast/lex.cc
+	COMMAND re2c_bootstrap -b ${CMAKE_CURRENT_SOURCE_DIR}/src/ast/lex.re -o ${CMAKE_CURRENT_BINARY_DIR}/src/ast/lex.cc
 	DEPENDS re2c_bootstrap
 )
 
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/src/ast/lex_conf.cc
-	COMMAND re2c_bootstrap -b ${CMAKE_SOURCE_DIR}/src/ast/lex_conf.re -o ${CMAKE_BINARY_DIR}/src/ast/lex_conf.cc
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/src/ast/lex_conf.cc
+	COMMAND re2c_bootstrap -b ${CMAKE_CURRENT_SOURCE_DIR}/src/ast/lex_conf.re -o ${CMAKE_CURRENT_BINARY_DIR}/src/ast/lex_conf.cc
 	DEPENDS re2c_bootstrap
 )
 
-add_custom_command(OUTPUT ${CMAKE_BINARY_DIR}/src/conf/parse_opts.cc
-	COMMAND re2c_bootstrap -b ${CMAKE_SOURCE_DIR}/src/conf/parse_opts.re -o ${CMAKE_BINARY_DIR}/src/conf/parse_opts.cc
+add_custom_command(OUTPUT ${CMAKE_CURRENT_BINARY_DIR}/src/conf/parse_opts.cc
+	COMMAND re2c_bootstrap -b ${CMAKE_CURRENT_SOURCE_DIR}/src/conf/parse_opts.re -o ${CMAKE_CURRENT_BINARY_DIR}/src/conf/parse_opts.cc
 	DEPENDS re2c_bootstrap
 )
 
 # TODO: if bison or yacc is available, regenerate these from src/parse/parser.ypp file instead
-configure_file(bootstrap/src/ast/parser.cc ${CMAKE_BINARY_DIR}/src/ast/parser.cc COPYONLY)
-configure_file(bootstrap/src/ast/y.tab.h ${CMAKE_BINARY_DIR}/src/ast/y.tab.h COPYONLY)
+configure_file(bootstrap/src/ast/parser.cc ${CMAKE_CURRENT_BINARY_DIR}/src/ast/parser.cc COPYONLY)
+configure_file(bootstrap/src/ast/y.tab.h ${CMAKE_CURRENT_BINARY_DIR}/src/ast/y.tab.h COPYONLY)
 
-configure_file(bootstrap/src/conf/help.cc ${CMAKE_BINARY_DIR}/src/conf/help.cc COPYONLY)
+configure_file(bootstrap/src/conf/help.cc ${CMAKE_CURRENT_BINARY_DIR}/src/conf/help.cc COPYONLY)
 
 set(autogen_SRCS
-	${CMAKE_BINARY_DIR}/src/ast/lex.cc
-	${CMAKE_BINARY_DIR}/src/ast/lex_conf.cc
-	${CMAKE_BINARY_DIR}/src/conf/parse_opts.cc
-	${CMAKE_BINARY_DIR}/src/ast/parser.cc
-	${CMAKE_BINARY_DIR}/src/ast/y.tab.h
-	${CMAKE_BINARY_DIR}/src/conf/help.cc
+	${CMAKE_CURRENT_BINARY_DIR}/src/ast/lex.cc
+	${CMAKE_CURRENT_BINARY_DIR}/src/ast/lex_conf.cc
+	${CMAKE_CURRENT_BINARY_DIR}/src/conf/parse_opts.cc
+	${CMAKE_CURRENT_BINARY_DIR}/src/ast/parser.cc
+	${CMAKE_CURRENT_BINARY_DIR}/src/ast/y.tab.h
+	${CMAKE_CURRENT_BINARY_DIR}/src/conf/help.cc
 )
 
 add_executable(re2c ${re2c_SRCS} ${re2c_HDRS} ${autogen_SRCS})
